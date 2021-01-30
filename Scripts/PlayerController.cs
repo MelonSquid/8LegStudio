@@ -33,5 +33,10 @@ public class PlayerController : MonoBehaviour
         //Get input from InputActions
         Vector2 moveVect2 = context.ReadValue<Vector2>();
         moveVect = new Vector3(moveVect2.x, 0, moveVect2.y);
+
+        //Rotate Player to face movement direction
+        Vector3 lookDir = Vector3.RotateTowards(transform.forward, moveVect, 4, 0);
+        transform.rotation = Quaternion.LookRotation(lookDir);
+
     }
 }
