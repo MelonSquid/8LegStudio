@@ -8,22 +8,36 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
-    private Vector3 moveVect;
 
     [SerializeField]
+    private CanvasController canvas;
+    [SerializeField]
+    private TriggerBoxController interactionTrigger;
+    [SerializeField]
     private float moveSpeed;
+    [SerializeField]
+    private int webShotCapacity;
+
+    private int webShotRemaining;
+    private Vector3 moveVect;
+    
+    //for moving blocks... rework
+    private Vector3 moveVectScaled;
+    private bool pushPull;
 
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        webShotRemaining = webShotCapacity;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Move the player every frame
+        moveVectScaled = moveVect * moveSpeed * Time.deltaTime; //Set for use of other functions
         controller.SimpleMove(moveVect * moveSpeed);
     }
     
@@ -38,5 +52,75 @@ public class PlayerController : MonoBehaviour
         Vector3 lookDir = Vector3.RotateTowards(transform.forward, moveVect, 4, 0);
         transform.rotation = Quaternion.LookRotation(lookDir);
 
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        bool buttonPress = context.ReadValueAsButton();
+        //Only on button press -- not on button release
+        if (buttonPress)
+        {
+            GameObject obj = interactionTrigger.GetFirstIndex();
+
+            if (obj != null)
+            {
+                obj.GetComponent<Interactable>().Interact(gameObject);
+            }
+            
+        }
+    }
+
+    
+    public void RemoveFromTriggerList(GameObject obj)
+    {
+        interactionTrigger.RemoveFromList(obj);
+    }
+
+
+    //Get Sets
+    public void SetPushPull(bool value)
+    {
+        pushPull = value;
+    }
+
+    public bool GetPushPull()
+    {
+        return pushPull;
+    }
+
+    public Vector3 GetMoveVectScaled()
+    {
+        return moveVectScaled;
+    }
+
+    public int GetWebShotRemaining()
+    {
+        return webShotRemaining;
+    }
+
+    public bool UseWebShot()
+    {
+        if (webShotRemaining > 0)
+        {
+            webShotRemaining--;
+            canvas.WebUsed();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
+
+    public int GetWebShotCapacity()
+    {
+        return webShotCapacity;
+    }
+
+    public void ResetWebShotRemaining()
+    {
+        canvas.WebRefilled();
+        webShotRemaining = webShotCapacity;
     }
 }
