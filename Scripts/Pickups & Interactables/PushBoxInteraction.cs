@@ -23,9 +23,10 @@ public class PushBoxInteraction : MonoBehaviour, Interactable
     {
         if (interacting)
         {
-            rb.MovePosition(player.GetMoveVectScaled());
+            rb.MovePosition(transform.position + player.GetMoveVectScaled());
         }
     }
+
     public void Interact(GameObject source)
     {
         if (!interacting)
@@ -39,8 +40,5 @@ public class PushBoxInteraction : MonoBehaviour, Interactable
             interacting = false;
             player = null;
         }
-    }
-
-    public void StopInteracting() { 
     }
 }

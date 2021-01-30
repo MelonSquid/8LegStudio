@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
     }
 
     //Late update to avoid visual choppiness
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         transform.position = subject.position + cameraOffest;
     }

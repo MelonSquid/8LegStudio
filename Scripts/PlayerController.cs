@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
     [SerializeField]
+    private float pushPower;
+    [SerializeField]
     private int webShotCapacity;
 
     private int webShotRemaining;
@@ -31,16 +33,33 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         webShotRemaining = webShotCapacity;
+        interactionTrigger.RemoveFromList(canvas.gameObject);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Move the player every frame
         moveVectScaled = moveVect * moveSpeed * Time.deltaTime; //Set for use of other functions
         controller.SimpleMove(moveVect * moveSpeed);
+
     }
-    
+
+    //Allow for pushing of Rigidbodies
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody hitBody = hit.collider.attachedRigidbody;
+        if (hitBody == null)
+        {
+            return; //do nothing if the hit body has no rigidbody
+        }
+        //remove y component from hit ?
+
+        hitBody.velocity = hit.moveDirection * pushPower;
+
+        //hitBody.AddForce(hit.moveDirection * pushPower, ForceMode.Force);
+    }
+
     //updates moveVect according to user input
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -60,6 +79,7 @@ public class PlayerController : MonoBehaviour
         //Only on button press -- not on button release
         if (buttonPress)
         {
+            interactionTrigger.InTriggerCount();
             GameObject obj = interactionTrigger.GetFirstIndex();
 
             if (obj != null)
@@ -69,6 +89,7 @@ public class PlayerController : MonoBehaviour
             
         }
     }
+
 
     
     public void RemoveFromTriggerList(GameObject obj)

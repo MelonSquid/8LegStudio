@@ -25,7 +25,7 @@ public class DestroyOnInteract : MonoBehaviour, Interactable
         if (result)
         {
             player.RemoveFromTriggerList(gameObject);
-            Destroy(gameObject);
+            Destroy(gameObject, .1f);
 
         }
     }

@@ -24,10 +24,7 @@ public class TriggerBoxController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.tag.Equals("Player"))
-        {
-            inTriggerList.Remove(other.gameObject);
-        }
+        inTriggerList.Remove(other.gameObject);
     }
 
 
@@ -35,7 +32,7 @@ public class TriggerBoxController : MonoBehaviour
     //Methods to access inTriggerList
     public int InTriggerCount()
     {
-        return inTriggerList.Count;
+        return inTriggerList.Count;        
     }
 
     public bool IsEmpty()
@@ -56,9 +53,6 @@ public class TriggerBoxController : MonoBehaviour
 
     public void RemoveFromList(GameObject other)
     {
-        if (inTriggerList.Contains(other))
-        {
-            inTriggerList.Remove(other);
-        }
+        inTriggerList.Remove(other);
     }
 }
