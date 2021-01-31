@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveVect;
     
     //for moving blocks... rework
-    private Vector3 moveVectScaled;
     private bool pushPull;
 
 
@@ -39,8 +38,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Move the player every frame
-        moveVectScaled = moveVect * moveSpeed * Time.deltaTime; //Set for use of other functions
+        Collider c = GetComponent<Collider>();
+        Vector3 bottom = c.bounds.center - new Vector3 (0, c.bounds.extents.y, 0);
+        Debug.DrawRay(bottom, Vector3.down * 10);
+
         controller.SimpleMove(moveVect * moveSpeed);
 
     }
@@ -107,11 +108,6 @@ public class PlayerController : MonoBehaviour
     public bool GetPushPull()
     {
         return pushPull;
-    }
-
-    public Vector3 GetMoveVectScaled()
-    {
-        return moveVectScaled;
     }
 
     public int GetWebShotRemaining()
