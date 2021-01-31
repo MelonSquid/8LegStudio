@@ -14,9 +14,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private TriggerBoxController interactionTrigger;
     [SerializeField]
+    private LayerMask layerMask;
+    [SerializeField]
     private float moveSpeed;
     [SerializeField]
     private float pushPower;
+    [SerializeField]
+    private float gravity;
     [SerializeField]
     private int webShotCapacity;
 
@@ -40,10 +44,17 @@ public class PlayerController : MonoBehaviour
     {
         Collider c = GetComponent<Collider>();
         Vector3 bottom = c.bounds.center - new Vector3 (0, c.bounds.extents.y, 0);
-        Debug.DrawRay(bottom, Vector3.down * 10);
+        bool isGrounded = Physics.Raycast(bottom, Vector3.down, .01f, ~layerMask);
+        if(!isGrounded)
+        {
+            moveVect.y -= gravity * Time.fixedDeltaTime;
+        }
+        else
+        {
+            moveVect.y = 0;
+        }
 
-        controller.SimpleMove(moveVect * moveSpeed);
-
+        controller.Move(moveVect * moveSpeed * Time.fixedDeltaTime);
     }
 
     //Allow for pushing of Rigidbodies
@@ -66,10 +77,13 @@ public class PlayerController : MonoBehaviour
     {
         //Get input from InputActions
         Vector2 moveVect2 = context.ReadValue<Vector2>();
-        moveVect = new Vector3(moveVect2.x, 0, moveVect2.y);
+        moveVect.x = moveVect2.x;
+        moveVect.z = moveVect2.y;
+
+        Vector3 moveVectNoY = new Vector3(moveVect.x, 0, moveVect.z);
 
         //Rotate Player to face movement direction
-        Vector3 lookDir = Vector3.RotateTowards(transform.forward, moveVect, 4, 0);
+        Vector3 lookDir = Vector3.RotateTowards(transform.forward, moveVectNoY, 4, 0);
         transform.rotation = Quaternion.LookRotation(lookDir);
 
     }
