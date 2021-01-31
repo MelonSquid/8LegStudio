@@ -15,7 +15,7 @@ public class WebPickup : MonoBehaviour
             player.ResetWebShotRemaining();
 
             player.RemoveFromTriggerList(gameObject);
-            Destroy(gameObject, .1f); //Delay added to ensure object is
+            Destroy(gameObject); //Delay added to ensure object is
 
         }
     }

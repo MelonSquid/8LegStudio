@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent (typeof (CharacterController))]
+[RequireComponent (typeof (AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     private CharacterController controller;
@@ -14,9 +15,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private TriggerBoxController interactionTrigger;
     [SerializeField]
-    private AudioClip webSound;
+    private AudioSource webSound;
     [SerializeField]
-    private AudioClip happySpider;
+    private AudioSource happySpider;
+    [SerializeField]
+    private AudioSource walkingSpider;
     [SerializeField]
     private float moveSpeed;
     [SerializeField]
@@ -74,6 +77,15 @@ public class PlayerController : MonoBehaviour
         moveVect.z = moveVect2.y;
 
         Vector3 moveVectNoY = new Vector3(moveVect.x, 0, moveVect.z);
+        
+        if(moveVectNoY.magnitude > 0.01)
+        {
+            walkingSpider.Play();
+        }
+        else
+        {
+            walkingSpider.Stop();
+        }
 
         //Rotate Player to face movement direction
         Vector3 lookDir = Vector3.RotateTowards(transform.forward, moveVectNoY, 4, 0);
@@ -87,8 +99,8 @@ public class PlayerController : MonoBehaviour
         //Only on button press -- not on button release
         if (buttonPress)
         {
-            interactionTrigger.InTriggerCount();
             GameObject obj = interactionTrigger.GetFirstIndex();
+
 
             if (obj != null)
             {
@@ -98,6 +110,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    //Music playing methods
+    public void HappySpider()
+    {
+        happySpider.Play();
+    }
 
     //IntereactionTrigger manager function
     public void RemoveFromTriggerList(GameObject obj)
@@ -118,6 +136,7 @@ public class PlayerController : MonoBehaviour
         {
             webShotRemaining--;
             canvas.WebUsed();
+            webSound.Play();
             return true;
         }
         else

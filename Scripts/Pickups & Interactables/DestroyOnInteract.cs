@@ -4,28 +4,26 @@ using UnityEngine;
 
 public class DestroyOnInteract : MonoBehaviour, Interactable
 {
+    [SerializeField]
+    private GameObject spawnOnDestroy;
+    [SerializeField]
+    private Transform spawnTransform;
+    [SerializeField]
+    private Vector3 spawnScale;
+    [SerializeField]
+    private Vector3 spawnRot;
 
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void Interact(GameObject source)
     {
         PlayerController player = source.GetComponent<PlayerController>();
         bool result = player.UseWebShot();
         if (result)
         {
+
+            GameObject web = Instantiate(spawnOnDestroy, spawnTransform.position, Quaternion.Euler(spawnRot));
+            web.transform.localScale = spawnScale;
             player.RemoveFromTriggerList(gameObject);
-            Destroy(gameObject, .1f);
+            Destroy(gameObject);
 
         }
     }
