@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private TriggerBoxController interactionTrigger;
     [SerializeField]
-    private LayerMask layerMask;
-    [SerializeField]
     private float moveSpeed;
     [SerializeField]
     private float pushPower;
@@ -26,9 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private int webShotRemaining;
     private Vector3 moveVect;
-    
-    //for moving blocks... rework
-    private bool pushPull;
 
 
     // Start is called before the first frame update
@@ -36,22 +31,18 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         webShotRemaining = webShotCapacity;
-        interactionTrigger.RemoveFromList(canvas.gameObject);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Collider c = GetComponent<Collider>();
-        Vector3 bottom = c.bounds.center - new Vector3 (0, c.bounds.extents.y, 0);
-        bool isGrounded = Physics.Raycast(bottom, Vector3.down, .01f, ~layerMask);
-        if(!isGrounded)
+        if(!controller.isGrounded)
         {
             moveVect.y -= gravity * Time.fixedDeltaTime;
         }
         else
         {
-            moveVect.y = 0;
+            moveVect.y = -.5f;
         }
 
         controller.Move(moveVect * moveSpeed * Time.fixedDeltaTime);
@@ -68,8 +59,6 @@ public class PlayerController : MonoBehaviour
         //remove y component from hit ?
 
         hitBody.velocity = hit.moveDirection * pushPower;
-
-        //hitBody.AddForce(hit.moveDirection * pushPower, ForceMode.Force);
     }
 
     //updates moveVect according to user input
@@ -106,7 +95,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    
+    //IntereactionTrigger manager function
     public void RemoveFromTriggerList(GameObject obj)
     {
         interactionTrigger.RemoveFromList(obj);
@@ -114,16 +103,6 @@ public class PlayerController : MonoBehaviour
 
 
     //Get Sets
-    public void SetPushPull(bool value)
-    {
-        pushPull = value;
-    }
-
-    public bool GetPushPull()
-    {
-        return pushPull;
-    }
-
     public int GetWebShotRemaining()
     {
         return webShotRemaining;
