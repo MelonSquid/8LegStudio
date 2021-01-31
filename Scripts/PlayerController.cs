@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private TriggerBoxController interactionTrigger;
     [SerializeField]
+    private AudioClip webSound;
+    [SerializeField]
+    private AudioClip happySpider;
+    [SerializeField]
     private float moveSpeed;
     [SerializeField]
     private float pushPower;

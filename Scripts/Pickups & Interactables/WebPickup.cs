@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class WebPickup : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject playerObject;
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.gameObject.Equals(playerObject))
         {
             PlayerController player = other.GetComponentInParent<PlayerController>();
             player.ResetWebShotRemaining();

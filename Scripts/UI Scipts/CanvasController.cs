@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class CanvasController : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> webMarkers;
     [SerializeField]
+    private Text frendsFoundText;
+    [SerializeField]
+    private Text friendsTotalText;
+    [SerializeField]
     private PlayerController player;
+    [SerializeField]
+    private int friendCount;
+
+    private int friendsFound;
 
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        friendsFound = 0;
+        friendsTotalText.text = friendCount.ToString();
     }
 
     public void WebUsed()
@@ -34,4 +38,11 @@ public class CanvasController : MonoBehaviour
             webMarkers[i].SetActive(true);
         }
     }
+    
+    public void FriendFound()
+    {
+        friendsFound++;
+        frendsFoundText.text = friendsFound.ToString();
+    }
+
 }
